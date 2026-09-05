@@ -195,8 +195,10 @@
         <input id="cfgUrl" placeholder="https://script.google.com/macros/s/.../exec"></div>
       <div class="campo"><label for="cfgPin">Clave</label>
         <input id="cfgPin" placeholder="La que pusieron en el script"></div>
+      <div id="cfgDiag" style="display:none;font-size:12.5px;padding:10px 12px;border-radius:5px;margin-bottom:12px"></div>
       <div class="acciones">
         <button class="btn btn-primario" id="cfgGuardar">Conectar</button>
+        <button class="btn btn-secundario" id="cfgProbar">Probar conexión</button>
         <button class="btn btn-secundario" id="cfgCerrar">Cancelar</button>
         <button class="btn btn-liberar" id="cfgSalir">Desconectar</button>
       </div>
@@ -731,6 +733,46 @@ function abrirCfg(){
 }
 function cerrarCfg(){ document.getElementById('fondoCfg').classList.remove('ver'); }
 
+function diag(texto,ok){
+  const d=document.getElementById('cfgDiag');
+  d.style.display='block';
+  d.style.background=ok?'#eaf5f0':'#fdf3f2';
+  d.style.border='1px solid '+(ok?'#a9d3c2':'#e0bab5');
+  d.style.color=ok?'#0d543f':'#8a2c22';
+  d.innerHTML=texto;
+}
+
+async function probarConexion(){
+  const url=document.getElementById('cfgUrl').value.trim();
+  const pin=document.getElementById('cfgPin').value.trim();
+  if(!url){ diag('Falta pegar la dirección de la aplicación web.',false); return; }
+  if(!/^https:\/\//.test(url)){ diag('La dirección tiene que empezar con <b>https://</b>.',false); return; }
+  if(!/\/exec$/.test(url)){
+    diag('La dirección tiene que terminar en <b>/exec</b>. Si termina en <b>/dev</b> es la de pruebas y no sirve; copiá la de <i>Implementar → Administrar implementaciones</i>.',false);
+    return;
+  }
+  diag('Probando…',true);
+  let r;
+  try{
+    r=await fetch(url+'?token='+encodeURIComponent(pin)+'&t='+Date.now(),{redirect:'follow'});
+  }catch(e){
+    diag('El navegador no pudo llegar al script. Suele ser por la dirección mal copiada, falta de internet, o porque la implementación no está publicada para <b>Cualquier usuario</b>.',false);
+    return;
+  }
+  if(!r.ok){ diag('El servidor respondió con un error <b>'+r.status+'</b>. Revisá que la implementación esté activa y publicada para Cualquier usuario.',false); return; }
+  const texto=await r.text();
+  if(texto.trim().startsWith('<')){
+    diag('La dirección devolvió una página de Google en vez de datos. Casi siempre es porque la implementación quedó en <b>Solo yo</b> en vez de <b>Cualquier usuario</b>, o porque falta autorizar el script una primera vez desde el menú <b>Cochera → Preparar planilla</b>.',false);
+    return;
+  }
+  let j;
+  try{ j=JSON.parse(texto); }catch(e){ diag('La respuesta no es válida. Verificá que el código del script esté completo y guardado.',false); return; }
+  if(!j.ok && j.error==='clave'){ diag('La dirección funciona, pero la <b>clave no coincide</b> con la del archivo Codigo.gs (respetá mayúsculas).',false); return; }
+  if(!j.ok){ diag('El script respondió con un error: '+esc(j.error||'desconocido'),false); return; }
+  const cant=Object.keys((j.estado||{}).datos||{}).length;
+  diag('Conexión correcta. La planilla respondió con <b>'+cant+'</b> cochera(s) ocupada(s). Tocá <b>Conectar</b> para usarla.',true);
+}
+
 /* ================= arranque ================= */
 cargar();
 document.getElementById('quien').value=cfg.usuario;
@@ -745,7 +787,8 @@ document.getElementById('btnImprimir').onclick=()=>window.print();
 document.getElementById('btnLlave').onclick=()=>fichaLlave(null);
 document.getElementById('btnLlave2').onclick=()=>{ fichaLlave(null); document.getElementById('ficha').scrollIntoView({behavior:'smooth',block:'center'}); };
 document.getElementById('quien').onchange=e=>{ cfg.usuario=e.target.value; guardarCfg(); };
-document.getElementById('conexion').onclick=abrirCfg;
+document.getElementById('conexion').onclick=()=>{ document.getElementById('cfgDiag').style.display='none'; abrirCfg(); };
+document.getElementById('cfgProbar').onclick=probarConexion;
 document.getElementById('cfgCerrar').onclick=cerrarCfg;
 document.getElementById('cfgSalir').onclick=()=>{ cfg.url=''; cfg.pin=''; guardarCfg(); cerrarCfg(); marcarConexion(false); aviso('Desconectado. Los datos quedan solo en esta computadora.'); };
 document.getElementById('cfgGuardar').onclick=async()=>{
