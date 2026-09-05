@@ -9,25 +9,23 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,600;0,700;1,400&family=Playfair+Display:wght@500;900&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
-  :root{
-    --verde-oscuro:#0d543f;
-    --verde:#138170;
-    --negro:#252525;
-    --papel:#f2f4f2;
-    --linea:#c9d3cd;
-    --libre:#138170;
-    --ocupada:#a83228;
-    --sale-hoy:#b8860b;
-    --dorado:#c9a227;
-  }
+  :root{--verde-oscuro:#0d543f;--verde:#138170;--negro:#252525;--papel:#f2f4f2;--linea:#c9d3cd;
+        --libre:#138170;--ocupada:#a83228;--sale-hoy:#b8860b;}
   *{box-sizing:border-box}
   html,body{margin:0;padding:0}
   body{font-family:'Montserrat',-apple-system,'Segoe UI',Roboto,sans-serif;background:var(--papel);color:var(--negro);font-size:14px;line-height:1.45}
-  header{background:var(--verde-oscuro);color:#fff;padding:14px 22px;display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+  header{background:var(--verde-oscuro);color:#fff;padding:12px 22px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
   header h1{font-family:'Playfair Display',Georgia,serif;font-weight:900;font-size:22px;margin:0}
-  header h1 span{display:block;font-family:'Montserrat',sans-serif;font-weight:400;font-size:12px;opacity:.75;letter-spacing:.4px}
+  header h1 span{display:block;font-family:'Montserrat',sans-serif;font-weight:400;font-size:12px;opacity:.75}
+  .barra-sup{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  #quien{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:#fff;border-radius:5px;padding:6px 8px;font-family:inherit;font-size:12.5px}
+  #quien option{color:#252525}
+  #conexion{display:flex;align-items:center;gap:7px;font-size:12px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:20px;padding:5px 12px;cursor:pointer}
+  #conexion .luz{width:9px;height:9px;border-radius:50%;background:#8aa39a;flex:none}
+  #conexion.viva .luz{background:#57d6a4}
+  #conexion.mala .luz{background:#e8896f}
   .contadores{display:flex;gap:10px;margin-left:auto;flex-wrap:wrap}
-  .contador{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:6px;padding:6px 12px;min-width:78px;text-align:center}
+  .contador{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:6px;padding:6px 12px;min-width:74px;text-align:center}
   .contador b{display:block;font-size:20px;line-height:1.1}
   .contador small{font-size:10.5px;opacity:.8}
 
@@ -44,7 +42,7 @@
   .num{font-size:24px;font-weight:700;fill:#fff;text-anchor:middle;dominant-baseline:middle;pointer-events:none}
   .patente-txt{font-size:13px;font-weight:600;fill:#fff;text-anchor:middle;dominant-baseline:middle;pointer-events:none;letter-spacing:.5px}
   .estrella{font-size:15px;fill:#ffd75e;pointer-events:none}
-  .pasillo{fill:#fbfcfb;stroke:#b9c4bf;stroke-width:1.5;stroke-dasharray:6 5;rx:8}
+  .pasillo{fill:#fbfcfb;stroke:#b9c4bf;stroke-width:1.5;stroke-dasharray:6 5}
   .pasillo-txt{font-size:13px;font-weight:700;fill:#7d8a85;dominant-baseline:middle}
   .acceso-txt{font-size:13px;fill:#5c6b66}
   .flecha{fill:none;stroke:#7d8a85;stroke-width:2.5}
@@ -67,6 +65,7 @@
   .btn{font-family:inherit;font-size:13px;font-weight:600;padding:9px 14px;border-radius:5px;border:1px solid transparent;cursor:pointer}
   .btn-primario{background:var(--verde-oscuro);color:#fff}
   .btn-primario:hover{background:#0a422f}
+  .btn-primario:disabled{opacity:.55;cursor:default}
   .btn-secundario{background:#fff;color:var(--negro);border-color:var(--linea)}
   .btn-secundario:hover{background:#f0f3f1}
   .btn-liberar{background:#fff;color:var(--ocupada);border-color:#e0bab5}
@@ -87,8 +86,15 @@
   .link.rojo{color:var(--ocupada)}
   .aviso{font-size:11.5px;color:#7d8a85;padding:10px 16px;border-top:1px solid var(--linea)}
   #estadoExcel{font-size:11.5px;color:#7d8a85}
-  .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(12px);background:var(--verde-oscuro);color:#fff;padding:11px 20px;border-radius:6px;font-size:13px;font-weight:600;opacity:0;pointer-events:none;transition:all .22s;z-index:50}
+  .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(12px);background:var(--verde-oscuro);color:#fff;padding:11px 20px;border-radius:6px;font-size:13px;font-weight:600;opacity:0;pointer-events:none;transition:all .22s;z-index:60;max-width:90vw;text-align:center}
   .toast.ver{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  .fondo{position:fixed;inset:0;background:rgba(20,32,28,.55);display:none;align-items:center;justify-content:center;z-index:70;padding:16px}
+  .fondo.ver{display:flex}
+  .panel{background:#fff;border-radius:10px;width:100%;max-width:460px;max-height:90vh;overflow:auto}
+  .panel h3{margin:0;padding:14px 18px;border-bottom:1px solid var(--linea);font-family:'Playfair Display',Georgia,serif;font-size:19px;color:var(--verde-oscuro)}
+  .panel .cuerpo{padding:16px 18px 20px}
+  .panel p{font-size:12.5px;color:#5c6b66;margin:0 0 14px}
   @media (max-width:980px){main{grid-template-columns:1fr;padding:14px}.contadores{margin-left:0;width:100%}}
   @media print{header{background:#fff;color:#000;border-bottom:2px solid #000}#ficha,.barra,.aviso{display:none}main{grid-template-columns:1fr}}
 </style>
@@ -97,6 +103,12 @@
 
 <header>
   <h1>Cochera techada<span>Eleton Resort &amp; SPA · Villa Carlos Paz</span></h1>
+  <div class="barra-sup">
+    <select id="quien" title="Quién está cargando">
+      <option>Recepción</option><option>Seguridad</option><option>Conserjería</option><option>Gerencia</option>
+    </select>
+    <div id="conexion" title="Configurar la conexión con la planilla"><i class="luz"></i><span id="conexionTxt">Modo local</span></div>
+  </div>
   <div class="contadores">
     <div class="contador"><b id="cLibres">–</b><small>libres</small></div>
     <div class="contador"><b id="cOcupadas">–</b><small>ocupadas</small></div>
@@ -139,7 +151,7 @@
     </div>
     <div style="overflow-x:auto">
       <table>
-        <thead><tr><th>Cochera</th><th>Habitación</th><th>Patente</th><th>Modelo</th><th>Ingreso</th><th>Salida</th><th>Observaciones</th><th></th></tr></thead>
+        <thead><tr><th>Cochera</th><th>Habitación</th><th>Patente</th><th>Modelo</th><th>Ingreso</th><th>Salida</th><th>Observaciones</th><th>Cargó</th><th></th></tr></thead>
         <tbody id="tabla"></tbody>
       </table>
     </div>
@@ -151,11 +163,11 @@
     </h2>
     <div style="overflow-x:auto">
       <table>
-        <thead><tr><th>Pasillo</th><th>Habitación</th><th>Patente</th><th>Modelo</th><th>Llave</th><th>Ingreso</th><th>Salida</th><th>Observaciones</th><th></th></tr></thead>
+        <thead><tr><th>Pasillo</th><th>Habitación</th><th>Patente</th><th>Modelo</th><th>Llave</th><th>Ingreso</th><th>Salida</th><th>Observaciones</th><th>Cargó</th><th></th></tr></thead>
         <tbody id="tablaLlaves"></tbody>
       </table>
     </div>
-    <p class="aviso">El Excel se exporta con tres hojas: <b>Cochera</b> (las 25 cocheras, las libres en blanco), <b>Autos con llave</b> y <b>Historial</b>. Si corregís algo en el Excel, volvé a importarlo con las mismas columnas y el plano se actualiza.</p>
+    <p class="aviso">El Excel se exporta con tres hojas: <b>Cochera</b>, <b>Autos con llave</b> e <b>Historial</b>. Con la planilla conectada, esa planilla ya es la base compartida y el Excel queda solo como respaldo.</p>
   </section>
 
   <section class="tarjeta" style="grid-column:1 / -1">
@@ -166,18 +178,36 @@
     </div>
     <div style="overflow-x:auto">
       <table>
-        <thead><tr><th>Retirado</th><th>Lugar</th><th>Habitación</th><th>Patente</th><th>Modelo</th><th>Ingreso</th><th>Salida prevista</th><th>Observaciones</th><th></th></tr></thead>
+        <thead><tr><th>Retirado</th><th>Lugar</th><th>Habitación</th><th>Patente</th><th>Modelo</th><th>Ingreso</th><th>Salida prevista</th><th>Observaciones</th><th>Quién</th><th></th></tr></thead>
         <tbody id="tablaHist"></tbody>
       </table>
     </div>
-    <p class="aviso">Cada vez que liberás una cochera o marcás un auto como retirado, el movimiento queda registrado acá con la fecha y hora. Se guardan los últimos 2000 movimientos. Si liberaste algo por error, usá <b>Volver a cargar</b> para devolverlo a su lugar.</p>
+    <p class="aviso">Cada vez que se libera una cochera o se retira un auto con llave, queda el movimiento con fecha, hora y quién lo hizo. Se guardan los últimos 2000. Si liberaste algo por error, usá <b>Volver a cargar</b>.</p>
   </section>
 </main>
+
+<div class="fondo" id="fondoCfg">
+  <div class="panel">
+    <h3>Conexión con la planilla</h3>
+    <div class="cuerpo">
+      <p>Pegá acá la dirección de la aplicación web que se publicó desde la planilla de Google. Sin esto, la app funciona igual pero los datos quedan solo en esta computadora.</p>
+      <div class="campo"><label for="cfgUrl">Dirección de la aplicación web</label>
+        <input id="cfgUrl" placeholder="https://script.google.com/macros/s/.../exec"></div>
+      <div class="campo"><label for="cfgPin">Clave</label>
+        <input id="cfgPin" placeholder="La que pusieron en el script"></div>
+      <div class="acciones">
+        <button class="btn btn-primario" id="cfgGuardar">Conectar</button>
+        <button class="btn btn-secundario" id="cfgCerrar">Cancelar</button>
+        <button class="btn btn-liberar" id="cfgSalir">Desconectar</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-/* ---------- geometría ---------- */
+/* ================= geometría ================= */
 const COCHERAS=[];
 [35,34,33,32,31,30,29,28,27,26].forEach((n,i)=>COCHERAS.push({n,x:120,y:45+i*61,w:130,h:61}));
 const XS=[470,595,720], W=125;
@@ -187,17 +217,16 @@ const XS=[470,595,720], W=125;
 [16,17,18].forEach((n,i)=>COCHERAS.push({n,x:XS[i],y:490,w:W,h:88}));
 [21,20,19].forEach((n,i)=>COCHERAS.push({n,x:XS[i],y:578,w:W,h:88}));
 const PRESIDENCIALES=[1,2];
-const PASILLOS=[
-  {n:1,x:470,y:152,w:375,h:44},
-  {n:2,x:470,y:416,w:375,h:44},
-  {n:3,x:470,y:681,w:375,h:44},
-  {n:4,x:120,y:672,w:330,h:44}
-];
+const PASILLOS=[{n:1,x:470,y:152,w:375,h:44},{n:2,x:470,y:416,w:375,h:44},
+                {n:3,x:470,y:681,w:375,h:44},{n:4,x:120,y:672,w:330,h:44}];
 
-/* ---------- datos ---------- */
-const CLAVE='eleton_cochera_v2';
+/* ================= estado ================= */
+const CLAVE='eleton_cochera_v2', CFG='eleton_cfg';
 let datos={}, llaves=[], historial=[];
 let seleccionada=null, llaveSel=null, memoria=null;
+let cfg={url:'',pin:'',usuario:'Recepción'};
+let enVuelo=false, ultimaSync=null, conectado=false;
+const enNube=()=>!!cfg.url;
 
 function guardar(){
   const p=JSON.stringify({datos,llaves,historial});
@@ -205,12 +234,13 @@ function guardar(){
 }
 function cargar(){
   let crudo=null;
-  try{ crudo=localStorage.getItem(CLAVE)||localStorage.getItem('eleton_cochera_v1'); }catch(e){ crudo=memoria; }
-  if(!crudo) return;
-  try{ const p=JSON.parse(crudo); datos=p.datos||{}; llaves=p.llaves||[]; historial=p.historial||[]; }catch(e){}
+  try{ crudo=localStorage.getItem(CLAVE); }catch(e){ crudo=memoria; }
+  if(crudo){ try{ const p=JSON.parse(crudo); datos=p.datos||{}; llaves=p.llaves||[]; historial=p.historial||[]; }catch(e){} }
+  try{ cfg=Object.assign(cfg,JSON.parse(localStorage.getItem(CFG)||'{}')); }catch(e){}
 }
+function guardarCfg(){ try{ localStorage.setItem(CFG,JSON.stringify(cfg)); }catch(e){} }
 
-/* ---------- utilidades ---------- */
+/* ================= utilidades ================= */
 const hoyISO=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');};
 const horaActual=()=>{const d=new Date();return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');};
 function aTexto(iso){ if(!iso) return ''; const p=String(iso).split('-'); return p.length===3? p[2]+'/'+p[1]+'/'+p[0] : iso; }
@@ -226,18 +256,98 @@ function aISO(txt){
 function estado(n){ const r=datos[n]; if(!r) return 'libre'; return (r.salida&&r.salida===hoyISO())?'sale':'ocupada'; }
 const COLOR={libre:'#138170',ocupada:'#a83228',sale:'#b8860b'};
 function esc(t){ return String(t==null?'':t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function origenDe(lugar){
+  const c=String(lugar||'').match(/Cochera\s*(\d+)/i); if(c) return {tipo:'cochera',n:+c[1]};
+  const p=String(lugar||'').match(/Pasillo\s*(\d+)/i); if(p) return {tipo:'llave',pasillo:p[1],llave:''};
+  return null;
+}
+const claveHist=h=>[aTexto(h.liberada),h.hora||'',h.lugar||'',h.patente||''].join('|');
 let temporizador;
 function aviso(txt){
   const t=document.getElementById('toast');
   t.textContent=txt; t.classList.add('ver');
-  clearTimeout(temporizador); temporizador=setTimeout(()=>t.classList.remove('ver'),2800);
+  clearTimeout(temporizador); temporizador=setTimeout(()=>t.classList.remove('ver'),3200);
+}
+function repintarTodo(){ pintarPlano(); dibujarTabla(); dibujarLlaves(); dibujarHistorial(); }
+
+/* ================= sincronización ================= */
+function normalizar(est){
+  const d={};
+  Object.keys(est.datos||{}).forEach(n=>{
+    const r=est.datos[n];
+    d[n]={habitacion:r.habitacion||'',patente:r.patente||'',modelo:r.modelo||'',
+      ingreso:aISO(r.ingreso),salida:aISO(r.salida),nota:r.nota||'',usuario:r.usuario||''};
+  });
+  const l=(est.llaves||[]).map(x=>({id:x.id,habitacion:x.habitacion||'',patente:x.patente||'',modelo:x.modelo||'',
+    pasillo:String(x.pasillo||4),llave:x.llave||'',ingreso:aISO(x.ingreso),salida:aISO(x.salida),
+    nota:x.nota||'',usuario:x.usuario||''}));
+  const h=(est.historial||[]).map(x=>({liberada:aISO(x.liberada),hora:x.hora||'',lugar:x.lugar||'',
+    habitacion:x.habitacion||'',patente:x.patente||'',modelo:x.modelo||'',ingreso:aISO(x.ingreso),
+    salida:aISO(x.salida),nota:x.nota||'',usuario:x.usuario||'',origen:origenDe(x.lugar)}));
+  return {datos:d,llaves:l,historial:h};
 }
 
-/* ---------- plano ---------- */
+function aplicarEstado(est){
+  const n=normalizar(est);
+  datos=n.datos; llaves=n.llaves; historial=n.historial;
+  guardar(); repintarTodo();
+  ultimaSync=new Date(); marcarConexion(true);
+}
+
+async function traer(silencioso){
+  if(!enNube()||enVuelo) return;
+  try{
+    const r=await fetch(cfg.url+'?token='+encodeURIComponent(cfg.pin)+'&t='+Date.now(),{redirect:'follow'});
+    const j=await r.json();
+    if(!j.ok) throw new Error(j.error||'respuesta inválida');
+    aplicarEstado(j.estado);
+  }catch(e){
+    marcarConexion(false);
+    if(!silencioso) aviso('No se pudo leer la planilla. Revisá la conexión o la clave.');
+  }
+}
+
+async function enviar(accion,extra){
+  if(!enNube()) return false;
+  enVuelo=true; marcarConexion(conectado,'Guardando…');
+  try{
+    const r=await fetch(cfg.url,{method:'POST',redirect:'follow',
+      headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body:JSON.stringify(Object.assign({token:cfg.pin,accion,usuario:cfg.usuario},extra))});
+    const j=await r.json();
+    if(!j.ok) throw new Error(j.error||'error');
+    aplicarEstado(j.estado);
+    return true;
+  }catch(e){
+    marcarConexion(false);
+    aviso('No se pudo guardar en la planilla. El dato quedó solo en esta pantalla: reintentá cuando vuelva la conexión.');
+    return false;
+  }finally{ enVuelo=false; }
+}
+
+function marcarConexion(ok,texto){
+  conectado=!!ok;
+  const c=document.getElementById('conexion'), t=document.getElementById('conexionTxt');
+  c.classList.toggle('viva',enNube()&&conectado);
+  c.classList.toggle('mala',enNube()&&!conectado);
+  if(texto){ t.textContent=texto; return; }
+  if(!enNube()){ t.textContent='Modo local'; return; }
+  if(!conectado){ t.textContent='Sin conexión'; return; }
+  t.textContent='En vivo · '+desdeHace();
+}
+function desdeHace(){
+  if(!ultimaSync) return 'actualizando';
+  const s=Math.round((Date.now()-ultimaSync.getTime())/1000);
+  if(s<10) return 'recién';
+  if(s<60) return 'hace '+s+' s';
+  const m=Math.round(s/60);
+  return 'hace '+m+' min';
+}
+
+/* ================= plano ================= */
 function dibujarPlano(){
   const svg=document.getElementById('plano');
   let h='';
-  // accesos
   h+='<g class="flecha"><path d="M360 18 L360 78 M344 62 L360 84 L376 62"/></g>';
   h+='<text class="acceso-txt" x="360" y="106" text-anchor="middle">Ingreso</text>';
   h+='<text class="acceso-txt" x="360" y="124" text-anchor="middle">Calle Virgilio</text>';
@@ -246,13 +356,11 @@ function dibujarPlano(){
   h+='<g class="flecha"><path d="M108 382 L48 382 M64 366 L42 382 L64 398"/></g>';
   h+='<text class="acceso-txt" x="72" y="406" text-anchor="middle" style="font-size:12px">Ingreso</text>';
   h+='<text class="acceso-txt" x="72" y="422" text-anchor="middle" style="font-size:12px">al hotel</text>';
-  // pasillos
   PASILLOS.forEach(p=>{
     h+=`<rect class="pasillo" x="${p.x}" y="${p.y}" width="${p.w}" height="${p.h}" rx="8"/>`;
     h+=`<text class="pasillo-txt" x="${p.x+14}" y="${p.y+p.h/2}">PASILLO ${p.n}</text>`;
     h+=`<g id="llaves-p${p.n}"></g>`;
   });
-  // cocheras
   COCHERAS.forEach(c=>{
     h+=`<g data-n="${c.n}">
       <rect class="cochera" id="rect-${c.n}" x="${c.x}" y="${c.y}" width="${c.w}" height="${c.h}" rx="4" tabindex="0" role="button"></rect>
@@ -280,20 +388,18 @@ function pintarPlano(){
     else { num.setAttribute('y',c.y+c.h/2); pat.textContent=''; }
     rect.setAttribute('aria-label',`Cochera ${c.n}: ${e==='libre'?'libre':'ocupada'+(r&&r.patente?', '+r.patente:'')}`);
   });
-  // chips de autos con llave
   PASILLOS.forEach(p=>{
     const g=document.getElementById('llaves-p'+p.n);
-    const lista=llaves.filter(l=>+l.pasillo===p.n);
-    const x0=p.x+112, disp=p.w-112-14, anchoChip=90, sep=7;
-    const caben=Math.max(1,Math.floor((disp+sep)/(anchoChip+sep)));
+    const lista=llaves.filter(l=>String(l.pasillo)===String(p.n));
+    const x0=p.x+112, disp=p.w-112-14, ancho=90, sep=7;
+    const caben=Math.max(1,Math.floor((disp+sep)/(ancho+sep)));
     let s='';
     lista.slice(0,caben).forEach((l,i)=>{
-      const x=x0+i*(anchoChip+sep);
-      s+=`<g class="chip-llave" data-id="${l.id}">
-        <rect x="${x}" y="${p.y+9}" width="${anchoChip}" height="${p.h-18}" rx="6"/>
-        <text x="${x+anchoChip/2}" y="${p.y+p.h/2}">${esc((l.patente||'—').slice(0,9))}</text></g>`;
+      const x=x0+i*(ancho+sep);
+      s+=`<g class="chip-llave" data-id="${esc(l.id)}"><rect x="${x}" y="${p.y+9}" width="${ancho}" height="${p.h-18}" rx="6"/>
+        <text x="${x+ancho/2}" y="${p.y+p.h/2}">${esc((l.patente||'—').slice(0,9))}</text></g>`;
     });
-    if(lista.length>caben) s+=`<text class="mas-txt" x="${x0+caben*(anchoChip+sep)}" y="${p.y+p.h/2}">+${lista.length-caben}</text>`;
+    if(lista.length>caben) s+=`<text class="mas-txt" x="${x0+caben*(ancho+sep)}" y="${p.y+p.h/2}">+${lista.length-caben}</text>`;
     g.innerHTML=s;
     g.querySelectorAll('.chip-llave').forEach(ch=>ch.addEventListener('click',()=>fichaLlave(ch.dataset.id)));
   });
@@ -304,14 +410,14 @@ function pintarPlano(){
   document.getElementById('cLlaves').textContent=llaves.length;
 }
 
-/* ---------- ficha de cochera ---------- */
+/* ================= ficha de cochera ================= */
 function seleccionar(n){
   seleccionada=n; llaveSel=null;
   const r=datos[n]||{}, est=estado(n);
   const et={libre:['Libre',COLOR.libre],ocupada:['Ocupada',COLOR.ocupada],sale:['Sale hoy',COLOR.sale]}[est];
   document.getElementById('fichaTitulo').innerHTML=`Cochera ${n} <span class="chip" style="background:${et[1]}">${et[0]}</span>`;
   document.getElementById('fichaCuerpo').innerHTML=`
-    ${PRESIDENCIALES.includes(n)?'<p class="nota-pres">★ Cochera reservada a las habitaciones presidenciales. Asignala a otra habitación solo si están libres.</p>':''}
+    ${PRESIDENCIALES.includes(n)?'<p class="nota-pres">★ Cochera reservada a las habitaciones presidenciales.</p>':''}
     <div class="campo"><label for="fHab">Número de habitación</label><input id="fHab" value="${esc(r.habitacion)}" placeholder="Ej.: 214"></div>
     <div class="campo"><label for="fPat">Patente</label><input id="fPat" value="${esc(r.patente)}" placeholder="Ej.: AB123CD" style="text-transform:uppercase"></div>
     <div class="campo"><label for="fMod">Marca y modelo</label><input id="fMod" value="${esc(r.modelo)}" placeholder="Ej.: VW Amarok gris"></div>
@@ -320,6 +426,7 @@ function seleccionar(n){
       <div class="campo"><label for="fSal">Salida</label><input type="date" id="fSal" value="${esc(r.salida)}"></div>
     </div>
     <div class="campo"><label for="fNota">Observaciones</label><textarea id="fNota" placeholder="Auto de cortesía, traslado, etc.">${esc(r.nota)}</textarea></div>
+    ${r.usuario?`<p class="vacio" style="padding:0 0 8px">Última carga: ${esc(r.usuario)}</p>`:''}
     <div class="acciones">
       <button class="btn btn-primario" id="bGuardar">${datos[n]?'Guardar cambios':'Ocupar cochera'}</button>
       ${datos[n]?'<button class="btn btn-liberar" id="bLiberar">Liberar</button>':''}
@@ -339,32 +446,41 @@ function limpiarFicha(){
   pintarPlano();
 }
 
-function guardarFicha(n){
+async function guardarFicha(n){
   const patente=document.getElementById('fPat').value.trim().toUpperCase();
   const habitacion=document.getElementById('fHab').value.trim();
   if(!patente&&!habitacion){ aviso('Cargá al menos la patente o la habitación.'); document.getElementById('fPat').focus(); return; }
   const rep=Object.keys(datos).find(k=>+k!==n&&datos[k].patente&&datos[k].patente===patente);
   if(patente&&rep&&!confirm(`La patente ${patente} ya figura en la cochera ${rep}. ¿Cargarla igual en la ${n}?`)) return;
-  datos[n]={habitacion,patente,
+  const reg={habitacion,patente,
     modelo:document.getElementById('fMod').value.trim(),
     ingreso:document.getElementById('fIng').value,
     salida:document.getElementById('fSal').value,
-    nota:document.getElementById('fNota').value.trim()};
-  guardar(); pintarPlano(); dibujarTabla(); seleccionar(n);
+    nota:document.getElementById('fNota').value.trim(),
+    usuario:cfg.usuario};
+  const boton=document.getElementById('bGuardar'); boton.disabled=true;
+  datos[n]=reg; guardar(); pintarPlano(); dibujarTabla();
+  if(enNube()) await enviar('cochera',{n,reg});
+  seleccionar(n);
   aviso('Cochera '+n+' actualizada.');
 }
 
-function liberar(n){
+async function liberar(n){
   const r=datos[n]; if(!r) return;
   if(!confirm(`¿Liberar la cochera ${n}${r.patente?' ('+r.patente+')':''}?`)) return;
-  historial.unshift({lugar:'Cochera '+n,origen:{tipo:'cochera',n},...r,liberada:hoyISO(),hora:horaActual()});
-  historial=historial.slice(0,2000);
-  delete datos[n];
-  guardar(); pintarPlano(); dibujarTabla(); dibujarHistorial(); limpiarFicha();
+  if(enNube()){
+    delete datos[n]; pintarPlano(); dibujarTabla();
+    await enviar('liberar',{n});
+  }else{
+    historial.unshift({lugar:'Cochera '+n,origen:{tipo:'cochera',n},...r,liberada:hoyISO(),hora:horaActual(),usuario:cfg.usuario});
+    historial=historial.slice(0,2000);
+    delete datos[n]; guardar(); repintarTodo();
+  }
+  limpiarFicha();
   aviso('Cochera '+n+' liberada.');
 }
 
-/* ---------- ficha de auto con llave ---------- */
+/* ================= ficha de auto con llave ================= */
 function fichaLlave(id){
   seleccionada=null; llaveSel=id;
   const l=(id?llaves.find(v=>v.id===id):null)||{};
@@ -383,6 +499,7 @@ function fichaLlave(id){
       <div class="campo"><label for="lSal">Salida</label><input type="date" id="lSal" value="${esc(l.salida)}"></div>
     </div>
     <div class="campo"><label for="lNota">Observaciones</label><textarea id="lNota" placeholder="Bloquea la 27, avisar antes de mover, etc.">${esc(l.nota)}</textarea></div>
+    ${l.usuario?`<p class="vacio" style="padding:0 0 8px">Última carga: ${esc(l.usuario)}</p>`:''}
     <div class="acciones">
       <button class="btn btn-primario" id="bLGuardar">${id?'Guardar cambios':'Agregar auto'}</button>
       ${id?'<button class="btn btn-liberar" id="bLRetirar">Se retiró</button>':''}
@@ -395,51 +512,57 @@ function fichaLlave(id){
   pintarPlano();
 }
 
-function guardarLlave(id){
+async function guardarLlave(id){
   const patente=document.getElementById('lPat').value.trim().toUpperCase();
   const habitacion=document.getElementById('lHab').value.trim();
   if(!patente&&!habitacion){ aviso('Cargá al menos la patente o la habitación.'); document.getElementById('lPat').focus(); return; }
-  const reg={
-    id:id||('k'+Date.now()),
-    habitacion,patente,
+  const reg={id:id||('k'+Date.now()),habitacion,patente,
     modelo:document.getElementById('lMod').value.trim(),
     pasillo:document.getElementById('lPas').value,
     llave:document.getElementById('lLlave').value.trim(),
     ingreso:document.getElementById('lIng').value,
     salida:document.getElementById('lSal').value,
-    nota:document.getElementById('lNota').value.trim()
-  };
+    nota:document.getElementById('lNota').value.trim(),
+    usuario:cfg.usuario};
   const i=llaves.findIndex(v=>v.id===reg.id);
   if(i>=0) llaves[i]=reg; else llaves.push(reg);
-  guardar(); pintarPlano(); dibujarLlaves(); fichaLlave(reg.id);
+  guardar(); pintarPlano(); dibujarLlaves();
+  if(enNube()) await enviar('llave',{reg});
+  fichaLlave(reg.id);
   aviso(id?'Auto actualizado.':'Auto agregado al pasillo '+reg.pasillo+'.');
 }
 
-function retirarLlave(id){
+async function retirarLlave(id){
   const l=llaves.find(v=>v.id===id); if(!l) return;
   if(!confirm(`¿Marcar como retirado el auto ${l.patente||''} del pasillo ${l.pasillo}?`)) return;
-  historial.unshift({lugar:'Pasillo '+l.pasillo,origen:{tipo:'llave',pasillo:l.pasillo,llave:l.llave||''},
-    habitacion:l.habitacion,patente:l.patente,modelo:l.modelo,ingreso:l.ingreso,salida:l.salida,nota:l.nota,
-    liberada:hoyISO(),hora:horaActual()});
-  historial=historial.slice(0,2000);
-  llaves=llaves.filter(v=>v.id!==id);
-  guardar(); pintarPlano(); dibujarLlaves(); dibujarHistorial(); limpiarFicha();
+  if(enNube()){
+    llaves=llaves.filter(v=>v.id!==id); pintarPlano(); dibujarLlaves();
+    await enviar('retirar',{id});
+  }else{
+    historial.unshift({lugar:'Pasillo '+l.pasillo,origen:{tipo:'llave',pasillo:l.pasillo,llave:l.llave||''},
+      habitacion:l.habitacion,patente:l.patente,modelo:l.modelo,ingreso:l.ingreso,salida:l.salida,
+      nota:l.nota,liberada:hoyISO(),hora:horaActual(),usuario:cfg.usuario});
+    historial=historial.slice(0,2000);
+    llaves=llaves.filter(v=>v.id!==id);
+    guardar(); repintarTodo();
+  }
+  limpiarFicha();
   aviso('Auto retirado. Acordate de devolver la llave.');
 }
 
-/* ---------- tablas ---------- */
+/* ================= tablas ================= */
 function dibujarTabla(){
   const f=document.getElementById('buscar').value.trim().toLowerCase();
   const filas=COCHERAS.map(c=>c.n).filter(n=>datos[n]).sort((a,b)=>a-b)
     .filter(n=>{ if(!f) return true; const r=datos[n]; return [n,r.habitacion,r.patente,r.modelo,r.nota].join(' ').toLowerCase().includes(f); });
   const tb=document.getElementById('tabla');
   if(!filas.length){
-    tb.innerHTML=`<tr><td colspan="8" style="color:#7d8a85;padding:18px 12px">${f?'Ningún vehículo coincide con la búsqueda.':'Todavía no hay vehículos cargados. Tocá una cochera verde en el plano para empezar.'}</td></tr>`;
+    tb.innerHTML=`<tr><td colspan="9" style="color:#7d8a85;padding:18px 12px">${f?'Ningún vehículo coincide con la búsqueda.':'Todavía no hay vehículos cargados. Tocá una cochera verde en el plano para empezar.'}</td></tr>`;
     return;
   }
   tb.innerHTML=filas.map(n=>{
     const r=datos[n];
-    return `<tr><td class="coch">${n}${PRESIDENCIALES.includes(n)?' ★':''}</td><td>${esc(r.habitacion)}</td><td>${esc(r.patente)}</td><td>${esc(r.modelo)}</td><td>${aTexto(r.ingreso)}</td><td>${aTexto(r.salida)}</td><td>${esc(r.nota)}</td>
+    return `<tr><td class="coch">${n}${PRESIDENCIALES.includes(n)?' ★':''}</td><td>${esc(r.habitacion)}</td><td>${esc(r.patente)}</td><td>${esc(r.modelo)}</td><td>${aTexto(r.ingreso)}</td><td>${aTexto(r.salida)}</td><td>${esc(r.nota)}</td><td>${esc(r.usuario)}</td>
       <td style="white-space:nowrap"><button class="link" data-editar="${n}">Editar</button><button class="link rojo" data-liberar="${n}">Liberar</button></td></tr>`;
   }).join('');
   tb.querySelectorAll('[data-editar]').forEach(b=>b.onclick=()=>{ seleccionar(+b.dataset.editar); document.getElementById('ficha').scrollIntoView({behavior:'smooth',block:'center'}); });
@@ -449,78 +572,79 @@ function dibujarTabla(){
 function dibujarLlaves(){
   const tb=document.getElementById('tablaLlaves');
   if(!llaves.length){
-    tb.innerHTML='<tr><td colspan="9" style="color:#7d8a85;padding:18px 12px">No hay autos guardados en los pasillos.</td></tr>';
+    tb.innerHTML='<tr><td colspan="10" style="color:#7d8a85;padding:18px 12px">No hay autos guardados en los pasillos.</td></tr>';
     return;
   }
   tb.innerHTML=llaves.slice().sort((a,b)=>a.pasillo-b.pasillo).map(l=>
-    `<tr><td class="coch">Pasillo ${esc(l.pasillo)}</td><td>${esc(l.habitacion)}</td><td>${esc(l.patente)}</td><td>${esc(l.modelo)}</td><td>${esc(l.llave)}</td><td>${aTexto(l.ingreso)}</td><td>${aTexto(l.salida)}</td><td>${esc(l.nota)}</td>
-     <td style="white-space:nowrap"><button class="link" data-led="${l.id}">Editar</button><button class="link rojo" data-lret="${l.id}">Se retiró</button></td></tr>`).join('');
+    `<tr><td class="coch">Pasillo ${esc(l.pasillo)}</td><td>${esc(l.habitacion)}</td><td>${esc(l.patente)}</td><td>${esc(l.modelo)}</td><td>${esc(l.llave)}</td><td>${aTexto(l.ingreso)}</td><td>${aTexto(l.salida)}</td><td>${esc(l.nota)}</td><td>${esc(l.usuario)}</td>
+     <td style="white-space:nowrap"><button class="link" data-led="${esc(l.id)}">Editar</button><button class="link rojo" data-lret="${esc(l.id)}">Se retiró</button></td></tr>`).join('');
   tb.querySelectorAll('[data-led]').forEach(b=>b.onclick=()=>{ fichaLlave(b.dataset.led); document.getElementById('ficha').scrollIntoView({behavior:'smooth',block:'center'}); });
   tb.querySelectorAll('[data-lret]').forEach(b=>b.onclick=()=>retirarLlave(b.dataset.lret));
 }
 
-/* ---------- historial ---------- */
 function dibujarHistorial(){
   const f=document.getElementById('buscarHist').value.trim().toLowerCase();
-  const lista=historial.filter(h=>!f||[h.lugar,h.habitacion,h.patente,h.modelo,h.nota,aTexto(h.liberada),aTexto(h.ingreso)].join(' ').toLowerCase().includes(f));
+  const lista=historial.filter(h=>!f||[h.lugar,h.habitacion,h.patente,h.modelo,h.nota,h.usuario,aTexto(h.liberada),aTexto(h.ingreso)].join(' ').toLowerCase().includes(f));
   document.getElementById('cHist').textContent=historial.length?`· ${historial.length} movimiento${historial.length>1?'s':''}`:'';
   const tb=document.getElementById('tablaHist');
   if(!lista.length){
-    tb.innerHTML=`<tr><td colspan="9" style="color:#7d8a85;padding:18px 12px">${f?'Ningún movimiento coincide con la búsqueda.':'Todavía no hay movimientos. Cuando liberes una cochera o retires un auto, queda registrado acá.'}</td></tr>`;
+    tb.innerHTML=`<tr><td colspan="10" style="color:#7d8a85;padding:18px 12px">${f?'Ningún movimiento coincide con la búsqueda.':'Todavía no hay movimientos registrados.'}</td></tr>`;
     return;
   }
-  tb.innerHTML=lista.map((h,i)=>
+  tb.innerHTML=lista.map(h=>
     `<tr><td class="coch">${aTexto(h.liberada)}${h.hora?' <span style="font-weight:400;color:#7d8a85">'+esc(h.hora)+'</span>':''}</td>
       <td>${esc(h.lugar)}</td><td>${esc(h.habitacion)}</td><td>${esc(h.patente)}</td><td>${esc(h.modelo)}</td>
-      <td>${aTexto(h.ingreso)}</td><td>${aTexto(h.salida)}</td><td>${esc(h.nota)}</td>
-      <td style="white-space:nowrap"><button class="link" data-volver="${historial.indexOf(h)}">Volver a cargar</button></td></tr>`).join('');
-  tb.querySelectorAll('[data-volver]').forEach(b=>b.onclick=()=>volverACargar(+b.dataset.volver));
+      <td>${aTexto(h.ingreso)}</td><td>${aTexto(h.salida)}</td><td>${esc(h.nota)}</td><td>${esc(h.usuario)}</td>
+      <td style="white-space:nowrap"><button class="link" data-volver="${esc(claveHist(h))}">Volver a cargar</button></td></tr>`).join('');
+  tb.querySelectorAll('[data-volver]').forEach(b=>b.onclick=()=>volverACargar(b.dataset.volver));
 }
 
-function volverACargar(i){
+async function volverACargar(clave){
+  const i=historial.findIndex(h=>claveHist(h)===clave);
   const h=historial[i]; if(!h) return;
-  const o=h.origen||{};
+  const o=h.origen||origenDe(h.lugar);
+  if(!o){ aviso('Ese movimiento no guarda el lugar exacto. Cargalo a mano en el plano.'); return; }
   if(o.tipo==='cochera'){
     if(datos[o.n]){ aviso(`La cochera ${o.n} está ocupada. Liberala primero o cargá el auto en otra.`); return; }
     if(!confirm(`¿Volver a cargar ${h.patente||'el vehículo'} en la cochera ${o.n}?`)) return;
-    datos[o.n]={habitacion:h.habitacion||'',patente:h.patente||'',modelo:h.modelo||'',ingreso:h.ingreso||'',salida:h.salida||'',nota:h.nota||''};
-    historial.splice(i,1);
-    guardar(); pintarPlano(); dibujarTabla(); dibujarHistorial(); seleccionar(o.n);
+    const reg={habitacion:h.habitacion||'',patente:h.patente||'',modelo:h.modelo||'',ingreso:h.ingreso||'',salida:h.salida||'',nota:h.nota||'',usuario:cfg.usuario};
+    datos[o.n]=reg; historial.splice(i,1); guardar(); repintarTodo();
+    if(enNube()){ await enviar('cochera',{n:o.n,reg}); await enviar('borrarHistorial',{clave}); }
+    seleccionar(o.n);
     aviso('Vehículo devuelto a la cochera '+o.n+'.');
-  }else if(o.tipo==='llave'){
-    if(!confirm(`¿Volver a cargar ${h.patente||'el vehículo'} en el pasillo ${o.pasillo}?`)) return;
-    llaves.push({id:'k'+Date.now(),habitacion:h.habitacion||'',patente:h.patente||'',modelo:h.modelo||'',
-      pasillo:String(o.pasillo),llave:o.llave||'',ingreso:h.ingreso||'',salida:h.salida||'',nota:h.nota||''});
-    historial.splice(i,1);
-    guardar(); pintarPlano(); dibujarLlaves(); dibujarHistorial();
-    aviso('Vehículo devuelto al pasillo '+o.pasillo+'.');
   }else{
-    aviso('Este movimiento vino de un Excel importado y no guarda el lugar exacto. Cargalo a mano en el plano.');
+    if(!confirm(`¿Volver a cargar ${h.patente||'el vehículo'} en el pasillo ${o.pasillo}?`)) return;
+    const reg={id:'k'+Date.now(),habitacion:h.habitacion||'',patente:h.patente||'',modelo:h.modelo||'',
+      pasillo:String(o.pasillo),llave:o.llave||'',ingreso:h.ingreso||'',salida:h.salida||'',nota:h.nota||'',usuario:cfg.usuario};
+    llaves.push(reg); historial.splice(i,1); guardar(); repintarTodo();
+    if(enNube()){ await enviar('llave',{reg}); await enviar('borrarHistorial',{clave}); }
+    aviso('Vehículo devuelto al pasillo '+o.pasillo+'.');
   }
 }
 
-function vaciarHistorial(){
+async function vaciarHistorial(){
   if(!historial.length){ aviso('El historial ya está vacío.'); return; }
   if(!confirm(`Se van a borrar ${historial.length} movimiento(s) y no se pueden recuperar. Conviene exportar el Excel antes. ¿Vaciar igual?`)) return;
   historial=[]; guardar(); dibujarHistorial();
+  if(enNube()) await enviar('vaciarHistorial',{});
   aviso('Historial vaciado.');
 }
 
-/* ---------- Excel ---------- */
-const COLUMNAS=['Cochera','Estado','Habitación','Patente','Modelo','Ingreso','Salida','Observaciones'];
-const COL_LLAVES=['Pasillo','Habitación','Patente','Modelo','Llave','Ingreso','Salida','Observaciones'];
+/* ================= Excel ================= */
+const COLUMNAS=['Cochera','Estado','Habitación','Patente','Modelo','Ingreso','Salida','Observaciones','Cargó'];
+const COL_LLAVES=['Pasillo','Habitación','Patente','Modelo','Llave','Ingreso','Salida','Observaciones','Cargó'];
 
 function filasCocheras(){
   return COCHERAS.map(c=>c.n).sort((a,b)=>a-b).map(n=>{
     const r=datos[n]||{};
     return {'Cochera':n,'Estado':datos[n]?'Ocupada':'Libre','Habitación':r.habitacion||'','Patente':r.patente||'',
       'Modelo':r.modelo||'','Ingreso':aTexto(r.ingreso),'Salida':aTexto(r.salida),
-      'Observaciones':(PRESIDENCIALES.includes(n)?'[Presidencial] ':'')+(r.nota||'')};
+      'Observaciones':(PRESIDENCIALES.includes(n)?'[Presidencial] ':'')+(r.nota||''),'Cargó':r.usuario||''};
   });
 }
 function filasLlaves(){
   return llaves.map(l=>({'Pasillo':l.pasillo,'Habitación':l.habitacion||'','Patente':l.patente||'','Modelo':l.modelo||'',
-    'Llave':l.llave||'','Ingreso':aTexto(l.ingreso),'Salida':aTexto(l.salida),'Observaciones':l.nota||''}));
+    'Llave':l.llave||'','Ingreso':aTexto(l.ingreso),'Salida':aTexto(l.salida),'Observaciones':l.nota||'','Cargó':l.usuario||''}));
 }
 
 function exportar(){
@@ -528,16 +652,17 @@ function exportar(){
   if(window.XLSX){
     const wb=XLSX.utils.book_new();
     const h1=XLSX.utils.json_to_sheet(filasCocheras(),{header:COLUMNAS});
-    h1['!cols']=[{wch:9},{wch:10},{wch:12},{wch:12},{wch:24},{wch:12},{wch:12},{wch:34}];
+    h1['!cols']=[{wch:9},{wch:10},{wch:12},{wch:12},{wch:24},{wch:12},{wch:12},{wch:34},{wch:12}];
     XLSX.utils.book_append_sheet(wb,h1,'Cochera');
     const fl=filasLlaves();
     const h2=XLSX.utils.json_to_sheet(fl.length?fl:[Object.fromEntries(COL_LLAVES.map(c=>[c,'']))],{header:COL_LLAVES});
-    h2['!cols']=[{wch:9},{wch:12},{wch:12},{wch:24},{wch:16},{wch:12},{wch:12},{wch:34}];
+    h2['!cols']=[{wch:9},{wch:12},{wch:12},{wch:24},{wch:16},{wch:12},{wch:12},{wch:34},{wch:12}];
     XLSX.utils.book_append_sheet(wb,h2,'Autos con llave');
-    const hist=historial.map(r=>({'Retirado':aTexto(r.liberada),'Hora':r.hora||'','Lugar':r.lugar||'','Habitación':r.habitacion||'','Patente':r.patente||'','Modelo':r.modelo||'',
-      'Ingreso':aTexto(r.ingreso),'Salida prevista':aTexto(r.salida),'Observaciones':r.nota||''}));
-    const h3=XLSX.utils.json_to_sheet(hist.length?hist:[{'Retirado':'','Hora':'','Lugar':'','Habitación':'','Patente':'','Modelo':'','Ingreso':'','Salida prevista':'','Observaciones':''}]);
-    h3['!cols']=[{wch:12},{wch:7},{wch:12},{wch:12},{wch:12},{wch:24},{wch:12},{wch:14},{wch:34}];
+    const hist=historial.map(r=>({'Retirado':aTexto(r.liberada),'Hora':r.hora||'','Lugar':r.lugar||'','Habitación':r.habitacion||'',
+      'Patente':r.patente||'','Modelo':r.modelo||'','Ingreso':aTexto(r.ingreso),'Salida prevista':aTexto(r.salida),
+      'Observaciones':r.nota||'','Quién':r.usuario||''}));
+    const h3=XLSX.utils.json_to_sheet(hist.length?hist:[{'Retirado':'','Hora':'','Lugar':'','Habitación':'','Patente':'','Modelo':'','Ingreso':'','Salida prevista':'','Observaciones':'','Quién':''}]);
+    h3['!cols']=[{wch:12},{wch:7},{wch:12},{wch:12},{wch:12},{wch:24},{wch:12},{wch:14},{wch:34},{wch:12}];
     XLSX.utils.book_append_sheet(wb,h3,'Historial');
     XLSX.writeFile(wb,nombre+'.xlsx');
     aviso('Excel descargado.');
@@ -554,7 +679,7 @@ function exportar(){
 function importar(archivo){
   if(!window.XLSX){ aviso('Para importar hace falta conexión a internet. Probá de nuevo más tarde.'); return; }
   const lector=new FileReader();
-  lector.onload=e=>{
+  lector.onload=async e=>{
     try{
       const wb=XLSX.read(e.target.result,{type:'array'});
       const hojaC=wb.Sheets[wb.SheetNames.find(n=>/cochera/i.test(n))||wb.SheetNames[0]];
@@ -567,17 +692,16 @@ function importar(archivo){
         const hab=String(f['Habitación']||f['Habitacion']||'').trim();
         const pat=String(f['Patente']||'').trim().toUpperCase();
         const mod=String(f['Modelo']||'').trim();
-        const nota=String(f['Observaciones']||'').replace(/^\[Presidencial\]\s*/i,'').trim();
         if(!hab&&!pat&&!mod) return;
-        nuevos[n]={habitacion:hab,patente:pat,modelo:mod,ingreso:aISO(f['Ingreso']),salida:aISO(f['Salida']),nota};
+        nuevos[n]={habitacion:hab,patente:pat,modelo:mod,ingreso:aISO(f['Ingreso']),salida:aISO(f['Salida']),
+          nota:String(f['Observaciones']||'').replace(/^\[Presidencial\]\s*/i,'').trim(),usuario:String(f['Cargó']||'').trim()};
         leidas++;
       });
       let nuevasLlaves=llaves, leidasL=null;
       const nombreL=wb.SheetNames.find(n=>/llave/i.test(n));
       if(nombreL){
-        const fl=XLSX.utils.sheet_to_json(wb.Sheets[nombreL],{defval:''});
         nuevasLlaves=[];
-        fl.forEach((f,i)=>{
+        XLSX.utils.sheet_to_json(wb.Sheets[nombreL],{defval:''}).forEach((f,i)=>{
           const pat=String(f['Patente']||'').trim().toUpperCase();
           const hab=String(f['Habitación']||f['Habitacion']||'').trim();
           if(!pat&&!hab) return;
@@ -585,47 +709,32 @@ function importar(archivo){
           if(![1,2,3,4].includes(pas)) pas=4;
           nuevasLlaves.push({id:'k'+Date.now()+i,habitacion:hab,patente:pat,modelo:String(f['Modelo']||'').trim(),
             pasillo:String(pas),llave:String(f['Llave']||'').trim(),ingreso:aISO(f['Ingreso']),salida:aISO(f['Salida']),
-            nota:String(f['Observaciones']||'').trim()});
+            nota:String(f['Observaciones']||'').trim(),usuario:String(f['Cargó']||'').trim()});
         });
         leidasL=nuevasLlaves.length;
       }
-      let leidasH=null;
-      const nombreH=wb.SheetNames.find(n=>/histor/i.test(n));
-      if(nombreH){
-        const fh=XLSX.utils.sheet_to_json(wb.Sheets[nombreH],{defval:''});
-        const clave=h=>[h.liberada,h.hora,h.lugar,h.patente].join('|');
-        const vistos=new Set(historial.map(clave));
-        let sumados=0;
-        fh.forEach(f=>{
-          const pat=String(f['Patente']||'').trim().toUpperCase();
-          const lugar=String(f['Lugar']||'').trim();
-          if(!pat&&!lugar) return;
-          const reg={lugar,habitacion:String(f['Habitación']||f['Habitacion']||'').trim(),patente:pat,
-            modelo:String(f['Modelo']||'').trim(),ingreso:aISO(f['Ingreso']),
-            salida:aISO(f['Salida prevista']||f['Salida']),liberada:aISO(f['Retirado']),
-            hora:String(f['Hora']||'').trim(),nota:String(f['Observaciones']||'').trim()};
-          const m=lugar.match(/Cochera\s*(\d+)/i);
-          if(m) reg.origen={tipo:'cochera',n:+m[1]};
-          const p=lugar.match(/Pasillo\s*(\d+)/i);
-          if(p) reg.origen={tipo:'llave',pasillo:p[1],llave:''};
-          if(vistos.has(clave(reg))) return;
-          vistos.add(clave(reg)); historial.push(reg); sumados++;
-        });
-        historial.sort((a,b)=>String(b.liberada+(b.hora||'')).localeCompare(String(a.liberada+(a.hora||''))));
-        historial=historial.slice(0,2000);
-        leidasH=sumados;
-      }
-      if(!leidas&&leidasL!==null&&!leidasL&&!confirm('El archivo no trae vehículos cargados. ¿Querés vaciar igual el plano?')) return;
-      datos=nuevos; llaves=nuevasLlaves;
-      guardar(); pintarPlano(); dibujarTabla(); dibujarLlaves(); dibujarHistorial(); limpiarFicha();
-      aviso(`Importado: ${leidas} cochera(s) ocupada(s)`+(leidasL!==null?`, ${leidasL} auto(s) con llave`:'')+(leidasH?`, ${leidasH} movimiento(s) nuevos al historial`:'')+'.'+(ignoradas?` ${ignoradas} fila(s) sin número válido se ignoraron.`:''));
+      if(!leidas&&!confirm('El archivo no trae cocheras ocupadas. ¿Querés vaciar igual el plano?')) return;
+      if(enNube()&&!confirm('Esto reemplaza lo que hay en la planilla compartida, para todas las pantallas. ¿Seguimos?')) return;
+      datos=nuevos; llaves=nuevasLlaves; guardar(); repintarTodo(); limpiarFicha();
+      if(enNube()) await enviar('reemplazar',{estado:{datos,llaves}});
+      aviso(`Importado: ${leidas} cochera(s) ocupada(s)`+(leidasL!==null?`, ${leidasL} auto(s) con llave`:'')+'.'+(ignoradas?` ${ignoradas} fila(s) ignoradas.`:''));
     }catch(err){ aviso('No se pudo leer el archivo. Revisá que tenga las mismas columnas del export.'); }
   };
   lector.readAsArrayBuffer(archivo);
 }
 
-/* ---------- arranque ---------- */
-cargar(); dibujarPlano(); pintarPlano(); dibujarTabla(); dibujarLlaves(); dibujarHistorial();
+/* ================= configuración ================= */
+function abrirCfg(){
+  document.getElementById('cfgUrl').value=cfg.url;
+  document.getElementById('cfgPin').value=cfg.pin;
+  document.getElementById('fondoCfg').classList.add('ver');
+}
+function cerrarCfg(){ document.getElementById('fondoCfg').classList.remove('ver'); }
+
+/* ================= arranque ================= */
+cargar();
+document.getElementById('quien').value=cfg.usuario;
+dibujarPlano(); repintarTodo(); marcarConexion(false);
 document.getElementById('buscar').addEventListener('input',dibujarTabla);
 document.getElementById('buscarHist').addEventListener('input',dibujarHistorial);
 document.getElementById('btnVaciar').onclick=vaciarHistorial;
@@ -635,7 +744,22 @@ document.getElementById('archivo').onchange=e=>{ if(e.target.files[0]) importar(
 document.getElementById('btnImprimir').onclick=()=>window.print();
 document.getElementById('btnLlave').onclick=()=>fichaLlave(null);
 document.getElementById('btnLlave2').onclick=()=>{ fichaLlave(null); document.getElementById('ficha').scrollIntoView({behavior:'smooth',block:'center'}); };
-document.addEventListener('keydown',e=>{ if(e.key==='Escape') limpiarFicha(); });
+document.getElementById('quien').onchange=e=>{ cfg.usuario=e.target.value; guardarCfg(); };
+document.getElementById('conexion').onclick=abrirCfg;
+document.getElementById('cfgCerrar').onclick=cerrarCfg;
+document.getElementById('cfgSalir').onclick=()=>{ cfg.url=''; cfg.pin=''; guardarCfg(); cerrarCfg(); marcarConexion(false); aviso('Desconectado. Los datos quedan solo en esta computadora.'); };
+document.getElementById('cfgGuardar').onclick=async()=>{
+  cfg.url=document.getElementById('cfgUrl').value.trim();
+  cfg.pin=document.getElementById('cfgPin').value.trim();
+  guardarCfg(); cerrarCfg();
+  if(cfg.url){ await traer(false); if(conectado) aviso('Conectado a la planilla.'); }
+  else marcarConexion(false);
+};
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ cerrarCfg(); limpiarFicha(); } });
+document.addEventListener('visibilitychange',()=>{ if(!document.hidden) traer(true); });
+setInterval(()=>traer(true),10000);
+setInterval(()=>{ if(enNube()&&!enVuelo) marcarConexion(conectado); },5000);
+if(enNube()) traer(true);
 window.addEventListener('load',()=>{ document.getElementById('estadoExcel').textContent=window.XLSX?'':'Sin conexión: se exporta en CSV.'; });
 </script>
 </body>
